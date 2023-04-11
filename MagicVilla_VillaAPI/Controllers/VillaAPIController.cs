@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using MagicVilla_VillaAPI.Repository.IRepository;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
@@ -26,6 +27,9 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVillas()
         {
@@ -44,7 +48,10 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
+        [Authorize(Roles = "admin")]
         [HttpGet("{id:int}", Name = "GetVilla")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,6 +84,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost]
+        
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -112,9 +120,12 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("id:int", Name ="DeleteVilla")]
+        [Authorize(Roles = "CUSTOM")]
         public async Task<ActionResult<APIResponse>> DeleteVilla(int id) 
         {
             try
